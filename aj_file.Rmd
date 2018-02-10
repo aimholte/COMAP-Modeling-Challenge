@@ -1,0 +1,54 @@
+---
+title: "file1"
+author: "A.J. Imholte"
+date: "February 9, 2018"
+output: html_document
+---
+
+```{r}
+library(readxl)
+#UniqueProbCDataReal <- read_excel("C:/Users/aimho/Downloads/UniqueProbCDataReal.xls")
+#ProblemCData <- read_excel("C:Users/aimho/documents/COMAP-Modeling-Challenge/ProblemCData.xlsx")
+```
+```{r}
+library(tidyr)
+RealData <- spread(ProblemCData, key=MSN, value=Data)
+```
+```{r}
+library(ggplot2)
+theme_set(theme_classic())
+
+#plot(RealData$Year, RealData$TEPRB)
+
+#ggplot(RealData, aes(x = Year)) +
+  #geom_line(aes(y = TEPRB))
+
+gg <- ggplot(RealData, aes(x = Year, y = TEPRB)) + 
+  geom_line(aes(col = StateCode)) +
+  labs(subtitle = "Total Energy Production over Time",
+       y = "Energy Production (Billion BTU)",
+       x = "Year",
+       title = "Time Series")
+
+plot(gg)
+
+
+gg1 <- ggplot(RealData, aes(x = Year, y = TETCV)) +
+  geom_line(aes(col = StateCode)) +
+  labs(subtitle = "Total Energy Expenditure over Time",
+    y = "Energy Expenditure (Millions of Dollars)",
+    x = "Year",
+    title = "Time Series")
+
+plot(gg1)
+
+gg2 <- ggplot(RealData, aes(x = Year, y = TETCB)) +
+  geom_line(aes(col = StateCode)) +
+  labs(subtitle = "Total Energy Consumption over Time",
+       y = "Energy Consumption (Billions of BTU)",
+       x = "Year",
+       title = "Time Series")
+
+plot(gg2)
+```
+
