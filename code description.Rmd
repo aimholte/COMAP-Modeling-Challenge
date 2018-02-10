@@ -1,0 +1,17 @@
+---
+title: "code_description"
+author: "A.J. Imholte"
+date: "February 9, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+code_descriptions <- read_excel("C:/Users/aimho/OneDrive/code descriptions.xlsx")
+copy <- code_descriptions
+```
+
