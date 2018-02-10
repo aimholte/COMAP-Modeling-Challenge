@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r}
-library(readxl)
+#library(readxl)
 #UniqueProbCDataReal <- read_excel("C:/Users/aimho/Downloads/UniqueProbCDataReal.xls")
 #ProblemCData <- read_excel("C:Users/aimho/documents/COMAP-Modeling-Challenge/ProblemCData.xlsx")
 ```
