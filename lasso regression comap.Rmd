@@ -173,4 +173,12 @@ plot(regfit.full, scale = "bic")
 ```{r}
 coef(regfit.full,7)
 ```
+```{r}
+library(splines)
+fit <- lm(RealData$REPRB ~ bs( RealData$CLHCK + RealData$DKEIB + 
+    RealData$ELIMD + RealData$HYICB + RealData$LUACD + RealData$NUEGV + RealData$P1TCD + 
+    RealData$USICB + RealData$WXICV))
+plot(fit)
+pred <- predict(fit, se = T)
+```
 
