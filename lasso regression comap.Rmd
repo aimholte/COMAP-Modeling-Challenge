@@ -1,0 +1,126 @@
+---
+title: "Modeling_AJ"
+author: "A.J. Imholte"
+date: "February 10, 2018"
+output: html_document
+---
+
+```{r}
+library(tidyr)
+RealData <- spread(ProblemCData, key=MSN, value=Data)
+```
+
+```{r}
+library(ggplot2)
+RealData$GPP <- RealData$REPRB / RealData$TEPRB
+RealData$GPC <- RealData$RETCB / RealData$TETCB
+
+gg1 <- ggplot(RealData, aes(x = Year, y = GPC)) +
+  geom_line(aes(col = StateCode))
+plot(gg1)
+
+gg <- ggplot(RealData, aes(x = Year, y = GPP)) +
+  geom_line(aes(col = StateCode))
+plot(gg)
+
+gg2 <- ggplot(RealData, aes(x = Year, y = REPRB)) +
+  geom_line(aes(col = StateCode))
+plot(gg2)
+
+gg3 <- ggplot(RealData, aes(x = Year, y = RETCB)) +
+  geom_line(aes(col = StateCode))
+plot(gg3)
+```
+
+```{r}
+# Total Energy Consumption - TETCB
+
+#train <- sample(1:nrow(x), nrow(x)/2)
+#test <- (-train)
+#y.test <- y[-train]
+train <- 1:(nrow(RealData) / 2)
+trainingdata <- RealData[train]
+testingdata <- RealData[-train]
+```
+
+```{r}
+#Lasso
+
+library(glmnet)
+LassoMod <- glmnet(x[train,], y[train], alpha = 1)
+plot(LassoMod)
+LassoMod.pred <- predict(LassoMod, s = 207164, newx = x[-train, ])
+mse <- mean((LassoMod.pred-sample(y.test,20)^2))
+```
+
+
+
+```{r}
+# Lasso Regression with 10k cross-validation
+
+library(glmnet)
+x <- model.matrix(GPC ~., RealData)[,-1]
+y <- RealData$GPC
+train <- sample(1:nrow(x), nrow(x)/2)
+y <- sample(y, 120)
+test <- (-train)
+y.test <- y[test]
+y <- sample(y, 120)
+lasso.mod <- glmnet(x[train,],y[train],alpha=1)
+cv.out <- cv.glmnet(x[train,], y[train], alpha=1, nfolds=3)
+plot(cv.out)
+bestlam <- cv.out$lambda.min
+bestlam
+lasso.pred <- predict(lasso.mod,s=bestlam,newx = x[test,])
+mean((lasso.pred - y[test])^2)
+```
+```{r}
+out <- glmnet(x,y,alpha=1)
+lasso.coef <- predict(out, type = "coefficients", s=bestlam)
+lasso.coef
+```
+
+
+```{r}
+library(glmnet)
+x <- model.matrix(REPRB ~., RealData)[,-1]
+y <- RealData$TETCB
+train <- sample(1:nrow(x), nrow(x)/2)
+y <- sample(y, 120)
+test <- (-train)
+y.test <- y[test]
+y <- sample(y, 120)
+lasso.mod <- glmnet(x[train,],y[train],alpha=1)
+cv.out <- cv.glmnet(x[train,], y[train], alpha=1, nfolds=60)
+plot(cv.out)
+bestlam <- cv.out$lambda.min
+bestlam
+lasso.pred <- predict(lasso.mod,s=bestlam,newx = x[test,])
+mse.ridge <- mean((lasso.pred - y[test])^2)
+```
+```{r}
+library(glmnet)
+x <- model.matrix(REPRB ~., RealData)[,-1]
+y <- RealData$TETCB
+train <- sample(1:nrow(x), nrow(x)/2)
+y <- sample(y, 120)
+test <- (-train)
+y.test <- y[test]
+y <- sample(y, 120)
+lasso.mod <- glmnet(x[train,],y[train],alpha=0)
+cv.out <- cv.glmnet(x[train,], y[train], alpha=0, nfolds=60)
+plot(cv.out)
+bestlam <- cv.out$lambda.min
+bestlam
+lasso.pred <- predict(lasso.mod,s=bestlam,newx = x[test,], exact = T)
+mse.ols <- mean((lasso.pred - y[test])^2)
+```
+
+
+
+```{r}
+out <- glmnet(x,y,alpha=1)
+lasso.coef <- predict(out, type = "coefficients", s=400)
+lasso.coef
+```
+
