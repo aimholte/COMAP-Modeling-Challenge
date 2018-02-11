@@ -46,11 +46,11 @@ testingdata <- RealData[-train]
 ```{r}
 #Lasso
 
-library(glmnet)
-LassoMod <- glmnet(x[train,], y[train], alpha = 1)
-plot(LassoMod)
-LassoMod.pred <- predict(LassoMod, s = 207164, newx = x[-train, ])
-mse <- mean((LassoMod.pred-sample(y.test,20)^2))
+# library(glmnet)
+# LassoMod <- glmnet(x[train,], y[train], alpha = 1)
+# plot(LassoMod)
+# LassoMod.pred <- predict(LassoMod, s = 207164, newx = x[-train, ])
+# mse <- mean((LassoMod.pred-sample(y.test,20)^2))
 ```
 
 
@@ -120,7 +120,57 @@ mse.ols <- mean((lasso.pred - y[test])^2)
 
 ```{r}
 out <- glmnet(x,y,alpha=1)
-lasso.coef <- predict(out, type = "coefficients", s=400)
+lasso.coef <- predict(out, type = "coefficients", s=bestlam)
 lasso.coef
+```
+```{r}
+# A linear model with selected model terms...
+lm.mod <- lm(RealData$REPRB ~ RealData$CLHCK + RealData$DKEIB + 
+    RealData$ELIMD + RealData$HYICB + RealData$LUACD + RealData$LUICD + 
+    RealData$LUTCD + RealData$NUEGV + RealData$NUETV + RealData$P1TCD + 
+    RealData$USICB + RealData$WXICV)
+summary(lm.mod)
+
+lm.mod2 <- lm(RealData$REPRB ~ RealData$CLHCK + RealData$DKEIB + 
+    RealData$ELIMD + RealData$HYICB + RealData$LUACD + RealData$NUEGV + RealData$P1TCD + 
+    RealData$USICB + RealData$WXICV)
+summary(lm.mod2)
+
+#lm.mod3 <- lm(log(RealData$REPRB) ~ log(RealData$CLHCK) + log(RealData$DKEIB) + log(RealData$ELIMB) + log(RealData$HYICB) +
+#                                          log(RealData$LUACD) + log(RealData$NUEGV) + log(RealData$P1TCD) + log(RealData$USICB) + log(RealData$WXICV))
+
+# Fix this later
+```
+```{r}
+# Let's try best subset selection and see if results differ..., create a subset of the data
+library(leaps)
+subsetdata <- na.omit(RealData)
+regfit.full <- regsubsets(REPRB ~., data = subsetdata, really.big = T)
+regfit.summary <- summary(regfit.full)
+regfit.summary$rsq
+```
+```{r}
+par(mfrow = c(2,2))
+plot(regfit.summary$rss, xlab = "Number of Variables", ylab = "RSS", type = "l")
+plot(regfit.summary$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
+adjr2.max <- which.max(regfit.summary$adjr2)
+points(adjr2.max, regfit.summary$adjr2[adjr2.max], col = "red", cex=2, pch=20)
+```
+```{r}
+plot(regfit.summary$cp, xlab="Number of Variables", ylab = "Cp", type = "l")
+cp.min <- which.min(regfit.summary$cp)
+points(cp.min, regfit.summary$cp[cp.min], col = "red", cex=2,pch=20)
+bic.min <- which.min(regfit.summary$bic)
+plot(regfit.summary$bic, xlab="Number of Variables", ylab = "BIC", type = "l")
+points(bic.min, regfit.summary$bic[bic.min], col="red", cex=2, pch=20)
+```
+```{r}
+plot(regfit.full, scale = "r2")
+plot(regfit.full, scale = "adjr2")
+plot(regfit.full, scale = "Cp")
+plot(regfit.full, scale = "bic")
+```
+```{r}
+coef(regfit.full,7)
 ```
 
