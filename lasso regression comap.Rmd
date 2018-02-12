@@ -209,6 +209,46 @@ adr2list[r2max]
 var <- vars[r2max]
 var
 ```
+```{r}
+plm.1 <- plm(RETCB ~ MGACB, data = cleandata, index = c("StateCode", "Year"), model = "within")
+plm.1$
+plm.2 <- plm(RETCB ~ MGACB + FFTCB, data = cleandata, index = c("StateCode", "Year"), model = "within")
+plm.3 <- plm(RETCB ~ MGACB + FFTCB + TETCB, data = cleandata, index = c("StateCode", "Year"), model = "within")
+plm.4 <- plm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB, data = cleandata, index = c("StateCode", "Year"), model = "within")
+plm.5 <- plm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB, data = cleandata, index = c("StateCode", "Year"), model = "within")
+plm.6 <- plm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + NUETV, data = cleandata, index = c("StateCode", "Year"), model = "within")
+plm.7 <- plm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + NUETV + PATXB, data = cleandata, index = c("StateCode", "Year"), model = "within")
+plm.8 <- plm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + NUETV + PATXB + CLICD, data = cleandata, index = c("StateCode", "Year"), model = "within")
+plm.9 <- plm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + NUETV + PATXB + CLICD + NGACD , data = cleandata, index = c("StateCode", "Year"), model = "within")
+plm.10 <- plm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + NUETV + PATXB + CLICD + NGACD + CLKCV, data = cleandata, index = c("StateCode", "Year"), model = "within")
+summary(plm.1)
+summary(plm.2)
+summary(plm.3)
+summary(plm.4)
+summary(plm.5)
+summary(plm.6)
+summary(plm.7)
+summary(plm.8)
+summary(plm.9)
+summary(plm.10)
+```
+```{r}
+Cp <- function(RSS, resid, n) {
+  return((1 / n) * (RSS + 2 * var(resid)^2))
+}
+cplist <- c(Cp(6.9252e+11, plm.1$residuals, 200), Cp(5.3631e+11, plm.2$residuals, 200), Cp(4.2249e+11, plm.3$residuals, 200),
+            Cp(3.0887e+11, plm.5$residuals, 200), Cp(1.1184e+11, plm.6$residuals, 160), Cp(8.5299e+10, plm.7$residuals, 160),
+            Cp(7.4283e+10, plm.8$residuals, 160), Cp(6.9246e+10, plm.9$residuals, 160), Cp(6.3984e+10, plm.10$residuals, 160))
+rsqlist <- c(r.squared(plm.1, dfcor = TRUE), r.squared(plm.2, dfcor = TRUE), r.squared(plm.3, dfcor = TRUE),
+             r.squared(plm.4, dfcor = TRUE), r.squared(plm.5, dfcor = TRUE), r.squared(plm.6, dfcor = TRUE),
+             r.squared(plm.7, dfcor = TRUE), r.squared(plm.8, dfcor = TRUE), r.squared(plm.9, dfcor = TRUE),
+             r.squared(plm.10, dfcor = TRUE))
+numbervars <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+par(mfrow = c(1,2))
+plot(rsqlist, ylab = "Adjusted R Squared", xlab = "Number of Variables", type = "o")
+plot(cplist, ylab = "Cp", xlab = "Number of Variables", type = "o")
+```
+
 
 
 ```{r}
