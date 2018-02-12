@@ -186,14 +186,20 @@ plot(regfit.full, scale = "Cp")
 plot(regfit.full, scale = "bic")
 ```
 ```{r}
-coef(regfit.full,9)
+library(plm)
+coef(regfit.full,7)
 modifieddata <- na.omit(cleandata)
 row_sub <- apply(modifieddata, 1, function(row) all(row > 0))
 modifieddata[row_sub, ]
+modifieddata <- subset(modifieddata, RFCCD > 0)
 lm.model <- lm(RETCB ~ StateCode + DFEIV + ARTXD + ESRCV + NGEIV + NGMPK + NGTCV + RFCCD, data =  RealData)
 summary(lm.model)
 lm.mod.long <- lm(log(RETCB) ~ StateCode + log(DFEIV) + log(ARTXD) + log(ESRCV) + log(NGEIV) + log(NGTCV), data = modifieddata)
 summary(lm.mod.long)
+plm.log <- plm(log(RETCB) ~ log(DFEIV) + log(ARTXD) + log(ESRCV) + log(NGEIV) + log(NGTCV) + log(RFCCD), data = modifieddata, index = c("StateCode", "Year"), model = "within")
+summary(plm.log)
+plm.mod <- plm(RETCB ~ DFEIV + ARTXD + ESRCV + NGEIV + NGMPK + NGTCV + RFCCD, data = RealData)
+summary(plm.mod)
 ```
 
 
