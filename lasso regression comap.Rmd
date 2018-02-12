@@ -143,16 +143,71 @@ summary(lm.mod2)
 ```
 ```{r}
 varstoremove <- c("ABICP", "ARICP", "ABICP", "ARICP", "ARTCP", "ARTXP", "AVACP", "AVTCP", "AVTXP", "AVTXP", "CCEXP", "CCIMP", 'BMTCB',
-                  "CCNIP","CLACP","CLCCP","CLEIP","CLICP","CLKCP","CLOCP","CLPRP","CLRCP","CLTCP","CLTXP","COICP", "DFCCP",
+                  "CCNIP","CLACP","CLCCP","CLEIP","CLICP","CLKCP","CLOCP","CLPRP","CLRCP","CLTCP","CLTXP","COICP", 'COPRK', "DFCCP",
                   "DFICP", "DFRCP","DFTCP", "DFTXP", "DKEIP", "ELEXP", "ELIMP","ELNIP", 'EMFDB', "EMTCP","ESACP", "ESCCP", "ESICP",
-                  "ESRCP", "ESTCP",	"ESTXP", "FNICP",	'FOICP', 'FSICP',	'GEEGP', 'GECCB', 'GEEGB', 'GEEGP', 'GEICB', 'GERCB', 'GETCB', 'GETXB', 'GOCCB', 'GORCB', 'HYCCB', 'HYCCP', 'HYEGB', 'HYEGP','HYICB', 'HYICP', 'HYTCB',	'HYTCP', 'HYTXB', 'HYTXP',
-                  'JFACP', 'JFTCP', 'JFTXP','JKACP','JKTCP', 'JNACP', 'JNTCP','KSCCP', 'KSICP', 'KSRCP', 'KSTCP',	'KSTXP','LGACP', 'LGCCP', 'LGICP', 'LGRCP', 'LGTCP', 'LGTXP',	'LUACP','LUICP','LUTCD','LUTCP', 'LUTCV',	'LUTXP','MBICP', 'MGACP',	'MGCCP','MGICP','MGTCP', 'MGTXP', 'MSICP', 'NAICP', 'NGACP', 'NGCCP',	'NGEIP', 'NGICP', 'NGLPP', 'NGMPP', 'NGPZP', 'NGRCP',	'NGTCP','NGTXP','NGVHP', 'NUEGP', 'NUETP', 'P1ICP', 'P1TCP', 'P1TXP', 'PAACP', 'PACCP', 'PAEIP', 'PAICP', 'PAPRP', 'PARCP', 'PATCP', 'PATXP',	'PCCCP','PCEIP','PCICP','PCTCP',	'PLICP','POICP','POTCP','POTXP','PPICP','RFACP','RFCCP','RFEIP','RFICP','RFTCP','RFTXP','SGICP','SNICP','SOEGP','SOEGB','SOHCB', 'SOTCB', 'SOTXB','UOICP',	'USICP', 'WDCCB', 'WDEIB', 'WDICB', 'WDRCB', 'WDRCD', 'WDRCP', 'WDRCV', 'WDRSB', 'WDRXB', 'WWCCB', 'WWCCD', 'WWCCV', 'WWCSB', 'WWCXB', 'WWEIB', 'WWEID', 'WWEIV', 'WWICB', 'WWICD', 'WWICV', 'WWISB', 'WWIXB', 'WWTCB', 'WWTCD', 'WWTCV', 'WWTXB', 'WWTXD', 'WWTXV', 'WSCCB', 'WSEIB', 'WSICB','WXICP','WYEG', 'WYEGB', 'WYEGP', 'WYTCB','REPRB', 'ROPRB', 'CLICV' ,'GPP','GPC')
+                  "ESRCP", "ESTCP",	"ESTXP", "FNICP",	'FOICP', 'FSICP',	'GEEGP', "GETXV", 'GECCB', 'GEEGB', 'GEEGP', 'GEICB', 'GERCB', 'GETCB', 'GETXB', 'GOCCB', 'GORCB', 'HYCCB', 'HYCCP', 'HYEGB', 'HYEGP','HYICB', 'HYICP', 'HYTCB',	'HYTCP', 'HYTXB', 'HYTXP', 'HYTXV',
+                  'JFACP', 'JFTCP', 'JFTXP','JKACP','JKTCP', 'JNACP', 'JNTCP','KSCCP', 'KSICP', 'KSRCP', 'KSTCP',	'KSTXP','LGACP', 'LGCCP', 'LGICP', 'LGRCP', 'LGTCP', 'LGTXP',	'LUACP','LUICP','LUTCD','LUTCP', 'LUTCV',	'LUTXP','MBICP', 'MGACP',	'MGCCP','MGICP','MGTCP', 'MGTXP', 'MSICP', 'NAICP', 'NGACP', 'NGCCP',	'NGEIP', 'NGICP', 'NGLPP', 'NGMPP', 'NGPZP', 'NGRCP',	'NGTCP','NGTXP','NGVHP', 'NUEGP', 'NUETP', 'P1ICP', 'P1TCP', 'P1TXP', 'PAACP', 'PACCP', 'PAEIP', 'PAICP', 'PAPRP', 'PARCP', 'PATCP', 'PATXP', 'PATXV',	'PCCCP', 'PCCB', 'PCEIP','PCICP','PCTCP',	'PLICP','POICP','POTCP','POTXP','PPICP','RFACP','RFCCP','RFEIP','RFICP','RFTCP','RFTXP','SGICP','SNICP','SOEGP','SOEGB','SOHCB', 'SOTCB', 'SOTXB','UOICP',	'USICP', 'WDCCB', 'WDEIB', 'WDICB', 'WDRCB', 'WDRCD', 'WDRCP', 'WDRCV', 'WDRSB', 'WDRXB', 'WWCCB', 'WWCCD', 'WWCCV', 'WWCSB', 'WWCXB', 'WWEIB', 'WWEID', 'WWEIV', 'WWICB', 'WWICD', 'WWICV', 'WWISB', 'WWIXB', 'WWTCB', 'WWTCD', 'WWTCV', 'WWTXB', 'WWTXD', 'WWTXV', 'WSCCB', 'WSEIB', 'WSICB','WXICP','WYEG', 'WYEGB', 'WYEGP', 'WYTCB','REPRB', 'ROPRB', 'CLICV' ,'GPP','GPC', 'PCCCD', 'PCCCB', 'PCCCV', 'NUEGB', 'NUETB', 'NUEGV', 'JNACB', 'JNACP','JNTCB','JNTCP', 'WXICD', 'WXICP', 'WXICV')
 
 cleandata <- data.frame(RealData)
 cleandata <- cleandata[ , !names(cleandata) %in% varstoremove]
 train <- 1:(nrow(cleandata) / 2)
 trainingdata <- cleandata[train,]
 testingdata <- cleandata[-train,]
+```
+
+
+```{r}
+#Pseodocode
+# solution list
+# all model list
+# r2 list
+#For i in range from 1 to max variable count
+  #For j in range from 1 to al variables
+    #estimate consumption with solution plus one additional variable
+    #determine the best model with r2
+  #add this model to the model list
+  #add the term to the solution so we can start with it next time
+```
+
+
+```{r}
+modsolutions <- c()
+variablesused <- c('MGACB')
+for(j in 2:10){
+  for(i in 3:length(vars)){
+    adr2list <- c()
+    modlist <- c()
+    var <- vars[i]
+    #lm.mod <- lm(RETCB ~ get(var), data = cleandata)
+    plm.mod <- plm(RETCB ~ get(variablesused) + get(var), data = cleandata, index = c("StateCode", "Year"), model = "within")
+    adr2 <- r.squared(plm.mod, dfcor =  TRUE)
+    adr2list[j] <- adr2
+    modlist[j] <- plm.mod
+  }
+  maxr2 <- which.max(adr2list)
+  variablesused[i] <- vars[maxr2]
+  modsolutions[i] <- modlist[maxr2]
+}
+```
+
+```{r}
+adr2list <- c()
+modlist <- c()
+vars <- colnames(cleandata)
+vars <- vars[-331]
+vars[331]
+  for(i in 3:length(vars)){
+    var <- vars[i]
+    #lm.mod <- lm(RETCB ~ get(var), data = cleandata)
+    plm.mod <- plm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + NUETV + PATXB + CLICD + NGACD + CLKCV + get(var), data = cleandata, index = c("StateCode", "Year"), model = "within")
+    adr2 <- r.squared(plm.mod, dfcor =  TRUE)
+    adr2list[i] <- adr2
+    modlist[i] <- plm.mod
+  }
+r2max <- which.max(adr2list)
+adr2list[r2max]
+var <- vars[r2max]
+var
 ```
 
 
@@ -185,52 +240,8 @@ plot(regfit.full, scale = "adjr2")
 plot(regfit.full, scale = "Cp")
 plot(regfit.full, scale = "bic")
 ```
-```{r}
-library(plm)
-coef(regfit.full,7)
-modifieddata <- na.omit(cleandata)
-row_sub <- apply(modifieddata, 1, function(row) all(row > 0))
-modifieddata[row_sub, ]
-modifieddata <- subset(modifieddata, RFCCD > 0)
-lm.model <- lm(RETCB ~ StateCode + DFEIV + ARTXD + ESRCV + NGEIV + NGMPK + NGTCV + RFCCD, data =  RealData)
-summary(lm.model)
-lm.mod.long <- lm(log(RETCB) ~ StateCode + log(DFEIV) + log(ARTXD) + log(ESRCV) + log(NGEIV) + log(NGTCV), data = modifieddata)
-summary(lm.mod.long)
-plm.log <- plm(log(RETCB) ~ log(DFEIV) + log(ARTXD) + log(ESRCV) + log(NGEIV) + log(NGTCV) + log(RFCCD), data = modifieddata, index = c("StateCode", "Year"), model = "within")
-summary(plm.log)
-plm.mod <- plm(RETCB ~ DFEIV + ARTXD + ESRCV + NGEIV + NGMPK + NGTCV + RFCCD, data = RealData)
-summary(plm.mod)
-```
-```{r}
-library(plm)
-consumption <- cleandata$RETCB
-remove <- c("RETCB")
-predictors <- cleandata[, !names(cleandata) %in% remove]
-modlist <- list()
-for(i in 1:10){
-  for(j in 1:409){
-    
-    plm.mod.2 <- plm(RETCB ~ names(cleandata)[j], data = cleandata)
-    adjr2 <- r.squared(plm.mod.2, dfcor = TRUE)
-    modlist(j) <- plm.mod.2
-  }
-  maxR2 <- which.max(modlist)
-  print(modlist(maxR2))
-}
-```
-```{r}
-modlist <- list()
-adr2list <- list()
-vars <- colnames(cleandata)
-for(i in 3:409){
-  var <- vars[i]
-  plm.mod <- plm(RETCB ~ get(var), data = cleandata)
-  adr2 <- r.squared(plm.mod, dfcor =  TRUE)
-  modlist[i] <- plm.mod
-  adr2list[i] <- adr2
-}
-maxr2 <- which.max(adr2list)
-maxr2
-```
+
+
+
 
 
