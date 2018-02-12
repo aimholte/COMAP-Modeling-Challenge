@@ -210,8 +210,8 @@ var <- vars[r2max]
 var
 ```
 ```{r}
+modeldatayears <- subset(cleandata, Year >= 1970)
 plm.1 <- plm(RETCB ~ MGACB, data = cleandata, index = c("StateCode", "Year"), model = "within")
-plm.1$
 plm.2 <- plm(RETCB ~ MGACB + FFTCB, data = cleandata, index = c("StateCode", "Year"), model = "within")
 plm.3 <- plm(RETCB ~ MGACB + FFTCB + TETCB, data = cleandata, index = c("StateCode", "Year"), model = "within")
 plm.4 <- plm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB, data = cleandata, index = c("StateCode", "Year"), model = "within")
@@ -231,6 +231,8 @@ summary(plm.7)
 summary(plm.8)
 summary(plm.9)
 summary(plm.10)
+coefs <- plm.10$coefficients
+elasticities = c(coefs[1] * (mean(modeldatayears$MGACB)/mean(modeldatayears$RETCB)), coefs[2] * (mean(modeldatayears$FFTCB)/mean(modeldatayears$RETCB)), coefs[3] * (mean(modeldatayears$TETCB)/mean(modeldatayears$RETCB)), coefs[4] * (mean(modeldatayears$ELNIB)/mean(modeldatayears$RETCB)), coefs[5] * (mean(modeldatayears$ELISB)/mean(modeldatayears$RETCB)), coefs[6] * (mean(modeldatayears$NUETV)/mean(modeldatayears$RETCB)), coefs[7] * (mean(modeldatayears$PATXB)/mean(modeldatayears$RETCB)), coefs[8] * (mean(modeldatayears$CLICD)/mean(modeldatayears$RETCB)),coefs[9] * (mean(modeldatayears$NGACD)/mean(modeldatayears$RETCB)), coefs[10] * (mean(modeldatayears$CLKCV)/mean(modeldatayears$RETCB)))
 ```
 ```{r}
 Cp <- function(RSS, resid, n) {
@@ -248,37 +250,50 @@ par(mfrow = c(1,2))
 plot(rsqlist, ylab = "Adjusted R Squared", xlab = "Number of Variables", type = "o")
 plot(cplist, ylab = "Cp", xlab = "Number of Variables", type = "o")
 ```
-
-
-
 ```{r}
-# Let's try best subset selection and see if results differ..., create a subset of the data
-library(leaps)
-subsetdata <- na.omit(cleandata)
-regfit.full <- regsubsets(RETCB ~., data = cleandata, really.big = T, method = "forward")
-regfit.summary <- summary(regfit.full)
-regfit.summary$rsq
+library(stats)
+library(forecast)
+modeldataAZ <- subset(modeldatayears, StateCode == "AZ")
+modeldataCA <- subset(modeldatayears, StateCode == "CA")
+modeldataNM <- subset(modeldatayears, StateCode == "NM")
+modeldataTX <- subset(modeldatayears, StateCode == "TX")
+tsAZ <- ts(modeldataAZ, frequency = 1, start = 1970)
+tsCA <- ts(modeldataCA, frequency = 1, start = 1970)
+tsNM <- ts(modeldataNM, frequency = 1, start = 1970)
+tsTX <- ts(modeldataTX, frequency = 1, start = 1970)
+AZlm <- tslm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
+    NUETV + PATXB + CLICD + NGACD + CLKCV, data = tsAZ)
+CAlm <- tslm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
+    NUETV + PATXB + CLICD + NGACD + CLKCV, data = tsCA)
+NMlm <- tslm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
+    NUETV + PATXB + CLICD + NGACD + CLKCV, data = tsNM)
+TXlm <- tslm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
+    NUETV + PATXB + CLICD + NGACD + CLKCV, data = tsTX)
 ```
 ```{r}
-par(mfrow = c(2,2))
-plot(regfit.summary$rss, xlab = "Number of Variables", ylab = "RSS", type = "l")
-plot(regfit.summary$adjr2, xlab = "Number of Variables", ylab = "Adjusted RSq", type = "l")
-adjr2.max <- which.max(regfit.summary$adjr2)
-points(adjr2.max, regfit.summary$adjr2[adjr2.max], col = "red", cex=2, pch=20)
+coefsAZ <- AZlm$coefficients
+elasticitiesAZ = c(coefsAZ[2] * (mean(modeldataAZ$MGACB)/mean(modeldataAZ$RETCB)), coefsAZ[3] * (mean(modeldataAZ$FFTCB)/mean(modeldataAZ$RETCB)), coefsAZ[4] * (mean(modeldataAZ$TETCB)/mean(modeldataAZ$RETCB)), coefsAZ[5] * (mean(modeldataAZ$ELNIB)/mean(modeldataAZ$RETCB)), coefsAZ[6] * (mean(modeldataAZ$ELISB)/mean(modeldataAZ$RETCB)), coefsAZ[7] * (mean(modeldataAZ$NUETV)/mean(modeldataAZ$RETCB)), coefsAZ[8] * (mean(modeldataAZ$PATXB)/mean(modeldataAZ$RETCB)), coefsAZ[9] * (mean(modeldataAZ$CLICD)/mean(modeldataAZ$RETCB)),coefsAZ[10] * (mean(modeldataAZ$NGACD)/mean(modeldataAZ$RETCB)), coefsAZ[11] * (mean(modeldataAZ$CLKCV)/mean(modeldataAZ$RETCB)))
+elasticitiesAZ
+coefsCA <- CAlm$coefficients
+elasticitiesCA <- c(coefsCA[2] * (mean(modeldataCA$MGACB)/mean(modeldataCA$RETCB)), coefsCA[3] * (mean(modeldataCA$FFTCB)/mean(modeldataCA$RETCB)), coefsCA[4] * (mean(modeldataCA$TETCB)/mean(modeldataCA$RETCB)), coefsCA[5] * (mean(modeldataCA$ELNIB)/mean(modeldataCA$RETCB)), coefsCA[6] * (mean(modeldataCA$ELISB)/mean(modeldataCA$RETCB)), coefsCA[7] * (mean(modeldataCA$NUETV)/mean(modeldataCA$RETCB)), coefsCA[8] * (mean(modeldataCA$PATXB)/mean(modeldataCA$RETCB)), coefsCA[9] * (mean(modeldataCA$CLICD)/mean(modeldataCA$RETCB)),coefsCA[10] * (mean(modeldataCA$NGACD)/mean(modeldataCA$RETCB)), coefsCA[11] * (mean(modeldataCA$CLKCV)/mean(modeldataCA$RETCB)))
+elasticitiesCA
+coefsNM <- NMlm$coefficients
+elasticitiesNM <- c(coefsNM[2] * (mean(modeldataNM$MGACB)/mean(modeldataNM$RETCB)), coefsNM[3] * (mean(modeldataNM$FFTCB)/mean(modeldataNM$RETCB)), coefsNM[4] * (mean(modeldataNM$TETCB)/mean(modeldataNM$RETCB)), coefsNM[5] * (mean(modeldataNM$ELNIB)/mean(modeldataNM$RETCB)), coefsNM[6] * (mean(modeldataNM$ELISB)/mean(modeldataNM$RETCB)), coefsNM[7] * (mean(modeldataNM$NUETV)/mean(modeldataNM$RETCB)), coefsNM[8] * (mean(modeldataNM$PATXB)/mean(modeldataNM$RETCB)), coefsNM[9] * (mean(modeldataNM$CLICD)/mean(modeldataNM$RETCB)),coefsNM[10] * (mean(modeldataNM$NGACD)/mean(modeldataNM$RETCB)), coefsNM[11] * (mean(modeldataNM$CLKCV)/mean(modeldataNM$RETCB)))
+elasticitiesNM
+coefsTX <- TXlm$coefficients
+elasticitiesTX <- c(coefsTX[2] * (mean(modeldataTX$MGACB)/mean(modeldataTX$RETCB)), coefsTX[3] * (mean(modeldataTX$FFTCB)/mean(modeldataTX$RETCB)), coefsTX[4] * (mean(modeldataTX$TETCB)/mean(modeldataTX$RETCB)), coefsTX[5] * (mean(modeldataTX$ELNIB)/mean(modeldataTX$RETCB)), coefsTX[6] * (mean(modeldataTX$ELISB)/mean(modeldataTX$RETCB)), coefsTX[7] * (mean(modeldataTX$NUETV)/mean(modeldataTX$RETCB)), coefsTX[8] * (mean(modeldataTX$PATXB)/mean(modeldataTX$RETCB)), coefsTX[9] * (mean(modeldataTX$CLICD)/mean(modeldataTX$RETCB)),coefsTX[10] * (mean(modeldataTX$NGACD)/mean(modeldataTX$RETCB)), coefsTX[11] * (mean(modeldataTX$CLKCV)/mean(modeldataTX$RETCB)))
+elasticitiesTX
 ```
 ```{r}
-plot(regfit.summary$cp, xlab="Number of Variables", ylab = "Cp", type = "l")
-cp.min <- which.min(regfit.summary$cp)
-points(cp.min, regfit.summary$cp[cp.min], col = "red", cex=2,pch=20)
-bic.min <- which.min(regfit.summary$bic)
-plot(regfit.summary$bic, xlab="Number of Variables", ylab = "BIC", type = "l")
-points(bic.min, regfit.summary$bic[bic.min], col="red", cex=2, pch=20)
-```
-```{r}
-plot(regfit.full, scale = "r2")
-plot(regfit.full, scale = "adjr2")
-plot(regfit.full, scale = "Cp")
-plot(regfit.full, scale = "bic")
+#par(mfrow = c(2,2))
+plot(modeldataAZ$Year, modeldataAZ$RETCB, pch = 20, main = "Arizona's Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
+lines(modeldataAZ$Year, AZlm$fitted.values, col = "red")
+plot(modeldataCA$Year, modeldataCA$RETCB, pch = 20, main = "California's Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
+lines(modeldataCA$Year, CAlm$fitted.values, col = "red")
+plot(modeldataNM$Year, modeldataNM$RETCB, pch = 20, main = "New Mexico's Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
+lines(modeldataNM$Year, NMlm$fitted.values, col = "red")
+plot(modeldataTX$Year, modeldataTX$RETCB, pch = 20, main = "Texas' Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
+lines(modeldataTX$Year, TXlm$fitted.values, col = "red")
 ```
 
 
