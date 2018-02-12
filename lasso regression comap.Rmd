@@ -7,6 +7,8 @@ output: html_document
 
 ```{r}
 library(tidyr)
+library(readxl)
+ProblemCData <- read_excel("C:/Users/aimho/OneDrive/Documents/COMAP-Modeling-Challenge/ProblemCData.xlsx")
 RealData <- spread(ProblemCData, key=MSN, value=Data)
 ```
 
@@ -169,28 +171,8 @@ testingdata <- cleandata[-train,]
   #add the term to the solution so we can start with it next time
 ```
 
-
 ```{r}
-modsolutions <- c()
-variablesused <- c('MGACB')
-for(j in 2:10){
-  for(i in 3:length(vars)){
-    adr2list <- c()
-    modlist <- c()
-    var <- vars[i]
-    #lm.mod <- lm(RETCB ~ get(var), data = cleandata)
-    plm.mod <- plm(RETCB ~ get(variablesused) + get(var), data = cleandata, index = c("StateCode", "Year"), model = "within")
-    adr2 <- r.squared(plm.mod, dfcor =  TRUE)
-    adr2list[j] <- adr2
-    modlist[j] <- plm.mod
-  }
-  maxr2 <- which.max(adr2list)
-  variablesused[i] <- vars[maxr2]
-  modsolutions[i] <- modlist[maxr2]
-}
-```
-
-```{r}
+library(plm)
 adr2list <- c()
 modlist <- c()
 vars <- colnames(cleandata)
@@ -234,6 +216,8 @@ summary(plm.10)
 coefs <- plm.10$coefficients
 elasticities = c(coefs[1] * (mean(modeldatayears$MGACB)/mean(modeldatayears$RETCB)), coefs[2] * (mean(modeldatayears$FFTCB)/mean(modeldatayears$RETCB)), coefs[3] * (mean(modeldatayears$TETCB)/mean(modeldatayears$RETCB)), coefs[4] * (mean(modeldatayears$ELNIB)/mean(modeldatayears$RETCB)), coefs[5] * (mean(modeldatayears$ELISB)/mean(modeldatayears$RETCB)), coefs[6] * (mean(modeldatayears$NUETV)/mean(modeldatayears$RETCB)), coefs[7] * (mean(modeldatayears$PATXB)/mean(modeldatayears$RETCB)), coefs[8] * (mean(modeldatayears$CLICD)/mean(modeldatayears$RETCB)),coefs[9] * (mean(modeldatayears$NGACD)/mean(modeldatayears$RETCB)), coefs[10] * (mean(modeldatayears$CLKCV)/mean(modeldatayears$RETCB)))
 ```
+
+
 ```{r}
 Cp <- function(RSS, resid, n) {
   return((1 / n) * (RSS + 2 * var(resid)^2))
@@ -261,16 +245,17 @@ tsAZ <- ts(modeldataAZ, frequency = 1, start = 1970)
 tsCA <- ts(modeldataCA, frequency = 1, start = 1970)
 tsNM <- ts(modeldataNM, frequency = 1, start = 1970)
 tsTX <- ts(modeldataTX, frequency = 1, start = 1970)
-AZlm <- tslm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
+AZlm <- lm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
     NUETV + PATXB + CLICD + NGACD + CLKCV, data = tsAZ)
-CAlm <- tslm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
+CAlm <- lm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
     NUETV + PATXB + CLICD + NGACD + CLKCV, data = tsCA)
-NMlm <- tslm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
+NMlm <- lm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
     NUETV + PATXB + CLICD + NGACD + CLKCV, data = tsNM)
-TXlm <- tslm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
+TXlm <- lm(RETCB ~ MGACB + FFTCB + TETCB + ELNIB + ELISB + 
     NUETV + PATXB + CLICD + NGACD + CLKCV, data = tsTX)
 ```
 ```{r}
+elasticities
 coefsAZ <- AZlm$coefficients
 elasticitiesAZ = c(coefsAZ[2] * (mean(modeldataAZ$MGACB)/mean(modeldataAZ$RETCB)), coefsAZ[3] * (mean(modeldataAZ$FFTCB)/mean(modeldataAZ$RETCB)), coefsAZ[4] * (mean(modeldataAZ$TETCB)/mean(modeldataAZ$RETCB)), coefsAZ[5] * (mean(modeldataAZ$ELNIB)/mean(modeldataAZ$RETCB)), coefsAZ[6] * (mean(modeldataAZ$ELISB)/mean(modeldataAZ$RETCB)), coefsAZ[7] * (mean(modeldataAZ$NUETV)/mean(modeldataAZ$RETCB)), coefsAZ[8] * (mean(modeldataAZ$PATXB)/mean(modeldataAZ$RETCB)), coefsAZ[9] * (mean(modeldataAZ$CLICD)/mean(modeldataAZ$RETCB)),coefsAZ[10] * (mean(modeldataAZ$NGACD)/mean(modeldataAZ$RETCB)), coefsAZ[11] * (mean(modeldataAZ$CLKCV)/mean(modeldataAZ$RETCB)))
 elasticitiesAZ
@@ -285,18 +270,34 @@ elasticitiesTX <- c(coefsTX[2] * (mean(modeldataTX$MGACB)/mean(modeldataTX$RETCB
 elasticitiesTX
 ```
 ```{r}
-#par(mfrow = c(2,2))
-plot(modeldataAZ$Year, modeldataAZ$RETCB, pch = 20, main = "Arizona's Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
+par(mfrow = c(2,2))
+plot(modeldataAZ$Year, modeldataAZ$RETCB, pch = 20, main = "AZ Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
 lines(modeldataAZ$Year, AZlm$fitted.values, col = "red")
-plot(modeldataCA$Year, modeldataCA$RETCB, pch = 20, main = "California's Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
+plot(modeldataCA$Year, modeldataCA$RETCB, pch = 20, main = "CA Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
 lines(modeldataCA$Year, CAlm$fitted.values, col = "red")
-plot(modeldataNM$Year, modeldataNM$RETCB, pch = 20, main = "New Mexico's Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
+plot(modeldataNM$Year, modeldataNM$RETCB, pch = 20, main = "NM Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
 lines(modeldataNM$Year, NMlm$fitted.values, col = "red")
-plot(modeldataTX$Year, modeldataTX$RETCB, pch = 20, main = "Texas' Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
+plot(modeldataTX$Year, modeldataTX$RETCB, pch = 20, main = "TX Green Energy Consumption", xlab ="Year", ylab = "Consumption (Billions of BTU")
 lines(modeldataTX$Year, TXlm$fitted.values, col = "red")
 ```
 
+```{r}
+elasticities
+elasticitiesAZ
+elasticitiesCA
+elasticitiesNM
+elasticitiesTX
+```
 
-
+```{r}
+names2 <- c("Motor Gasoline Consumption (Transportation)", "Fossil Fules Consumption", "Total Energy Consumption", "U.S. Electricity Net Imports", "Net Electricity Interstate Sales", "Nuclear Fuel Expenditure", "Petroleum Product Consumption", "Coal Price (Industrial)", "Natural Gas Price (Transportation)", "Coal Expenditure (Coke Plants)")
+elasticiites.df <- data.frame(elasticities, elasticitiesAZ, elasticitiesCA, elasticitiesNM, elasticitiesTX)
+elasticiites.df$Total <- elasticiites.df$elasticities
+elasticiites.df$Arizona <- elasticiites.df$elasticitiesAZ
+elasticiites.df$California <- elasticiites.df$elasticitiesCA
+elasticiites.df$NewMexico <- elasticiites.df$elasticitiesNM
+elasticiites.df$Texas <- elasticiites.df$elasticitiesTX
+elasticiites.df <- elasticiites.df[,6:10]
+```
 
 
