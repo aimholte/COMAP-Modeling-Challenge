@@ -142,10 +142,25 @@ summary(lm.mod2)
 # Fix this later
 ```
 ```{r}
+varstoremove <- c("ABICP", "ARICP", "ABICP", "ARICP", "ARTCP", "ARTXP", "AVACP", "AVTCP", "AVTXP", "AVTXP", "CCEXP", "CCIMP", 'BMTCB',
+                  "CCNIP","CLACP","CLCCP","CLEIP","CLICP","CLKCP","CLOCP","CLPRP","CLRCP","CLTCP","CLTXP","COICP", "DFCCP",
+                  "DFICP", "DFRCP","DFTCP", "DFTXP", "DKEIP", "ELEXP", "ELIMP","ELNIP", 'EMFDB', "EMTCP","ESACP", "ESCCP", "ESICP",
+                  "ESRCP", "ESTCP",	"ESTXP", "FNICP",	'FOICP', 'FSICP',	'GEEGP', 'GECCB', 'GEEGB', 'GEEGP', 'GEICB', 'GERCB', 'GETCB', 'GETXB', 'GOCCB', 'GORCB', 'HYCCB', 'HYCCP', 'HYEGB', 'HYEGP','HYICB', 'HYICP', 'HYTCB',	'HYTCP', 'HYTXB', 'HYTXP',
+                  'JFACP', 'JFTCP', 'JFTXP','JKACP','JKTCP', 'JNACP', 'JNTCP','KSCCP', 'KSICP', 'KSRCP', 'KSTCP',	'KSTXP','LGACP', 'LGCCP', 'LGICP', 'LGRCP', 'LGTCP', 'LGTXP',	'LUACP','LUICP','LUTCD','LUTCP', 'LUTCV',	'LUTXP','MBICP', 'MGACP',	'MGCCP','MGICP','MGTCP', 'MGTXP', 'MSICP', 'NAICP', 'NGACP', 'NGCCP',	'NGEIP', 'NGICP', 'NGLPP', 'NGMPP', 'NGPZP', 'NGRCP',	'NGTCP','NGTXP','NGVHP', 'NUEGP', 'NUETP', 'P1ICP', 'P1TCP', 'P1TXP', 'PAACP', 'PACCP', 'PAEIP', 'PAICP', 'PAPRP', 'PARCP', 'PATCP', 'PATXP',	'PCCCP','PCEIP','PCICP','PCTCP',	'PLICP','POICP','POTCP','POTXP','PPICP','RFACP','RFCCP','RFEIP','RFICP','RFTCP','RFTXP','SGICP','SNICP','SOEGP','SOEGB','SOHCB', 'SOTCB', 'SOTXB','UOICP',	'USICP', 'WDCCB', 'WDEIB', 'WDICB', 'WDRCB', 'WDRCD', 'WDRCP', 'WDRCV', 'WDRSB', 'WDRXB', 'WWCCB', 'WWCCD', 'WWCCV', 'WWCSB', 'WWCXB', 'WWEIB', 'WWEID', 'WWEIV', 'WWICB', 'WWICD', 'WWICV', 'WWISB', 'WWIXB', 'WWTCB', 'WWTCD', 'WWTCV', 'WWTXB', 'WWTXD', 'WWTXV', 'WSCCB', 'WSEIB', 'WSICB','WXICP','WYEG', 'WYEGB', 'WYEGP', 'WYTCB','REPRB', 'ROPRB', 'CLICV' ,'GPP','GPC')
+
+cleandata <- data.frame(RealData)
+cleandata <- cleandata[ , !names(cleandata) %in% varstoremove]
+train <- 1:(nrow(cleandata) / 2)
+trainingdata <- cleandata[train,]
+testingdata <- cleandata[-train,]
+```
+
+
+```{r}
 # Let's try best subset selection and see if results differ..., create a subset of the data
 library(leaps)
-subsetdata <- na.omit(RealData)
-regfit.full <- regsubsets(REPRB ~., data = subsetdata, really.big = T)
+subsetdata <- na.omit(cleandata)
+regfit.full <- regsubsets(RETCB ~., data = cleandata, really.big = T, method = "forward")
 regfit.summary <- summary(regfit.full)
 regfit.summary$rsq
 ```
@@ -171,14 +186,14 @@ plot(regfit.full, scale = "Cp")
 plot(regfit.full, scale = "bic")
 ```
 ```{r}
-coef(regfit.full,7)
+coef(regfit.full,9)
+modifieddata <- na.omit(cleandata)
+row_sub <- apply(modifieddata, 1, function(row) all(row > 0))
+modifieddata[row_sub, ]
+lm.model <- lm(RETCB ~ StateCode + DFEIV + ARTXD + ESRCV + NGEIV + NGMPK + NGTCV + RFCCD, data =  RealData)
+summary(lm.model)
+lm.mod.long <- lm(log(RETCB) ~ StateCode + log(DFEIV) + log(ARTXD) + log(ESRCV) + log(NGEIV) + log(NGTCV), data = modifieddata)
+summary(lm.mod.long)
 ```
-```{r}
-library(splines)
-fit <- lm(RealData$REPRB ~ bs( RealData$CLHCK + RealData$DKEIB + 
-    RealData$ELIMD + RealData$HYICB + RealData$LUACD + RealData$NUEGV + RealData$P1TCD + 
-    RealData$USICB + RealData$WXICV))
-plot(fit)
-pred <- predict(fit, se = T)
-```
+
 
