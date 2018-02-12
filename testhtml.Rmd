@@ -1,0 +1,127 @@
+---
+title: "Untitled"
+author: "A.J. Imholte"
+date: "February 12, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+\begin{table}[!htbp] \centering 
+  \caption{Regression Results} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lD{.}{.}{-3} } 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & \multicolumn{1}{c}{Green Energy Consumption (Billions BTU} \\ 
+\hline \\[-1.8ex] 
+ Motor Gasoline Consumption (Transportation) & -0.193^{***} \\ 
+  & (0.035) \\ 
+  & \\ 
+ Fossil Fules Consumption & -0.764^{***} \\ 
+  & (0.031) \\ 
+  & \\ 
+ Total Energy Consumption & 0.717^{***} \\ 
+  & (0.032) \\ 
+  & \\ 
+ U.S. Electricity Net Imports & -0.255 \\ 
+  & (0.700) \\ 
+  & \\ 
+ Net Electricity Interstate Sales & -0.644^{***} \\ 
+  & (0.036) \\ 
+  & \\ 
+ Nuclear Fuel Expenditure & -978.963^{***} \\ 
+  & (58.519) \\ 
+  & \\ 
+ Petroleum Product Consumption & 0.062^{***} \\ 
+  & (0.015) \\ 
+  & \\ 
+ Coal Price (Industrial) & 28,970.920^{***} \\ 
+  & (4,520.234) \\ 
+  & \\ 
+ Natural Gas Price (Transportation) & -3,092.931^{***} \\ 
+  & (849.855) \\ 
+  & \\ 
+ Coal Expenditure (Coke Plants) & -559.862^{***} \\ 
+  & (161.571) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & \multicolumn{1}{c}{160} \\ 
+R$^{2}$ & \multicolumn{1}{c}{0.924} \\ 
+Adjusted R$^{2}$ & \multicolumn{1}{c}{0.917} \\ 
+F Statistic & \multicolumn{1}{c}{176.390$^{***}$ (df = 10; 146)} \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+> install.packages("dcolumn")
+Installing package into ‘C:/Users/aimho/OneDrive/Documents/R/win-library/3.4’
+(as ‘lib’ is unspecified)
+Warning in install.packages :
+  package ‘dcolumn’ is not available (for R version 3.4.1)
+> stargazer(plm.10, align = TRUE, title = "Regression Results", dep.var.labels = "Green Energy Consumption (Billions BTU", covariate.labels = names2, type = "HTML")
+> stargazer(plm.10, align = TRUE, title = "Regression Results", dep.var.labels = "Green Energy Consumption (Billions BTU", covariate.labels = names2, type = "html")
+
+<table style="text-align:center"><caption><strong>Regression Results</strong></caption>
+<tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td><em>Dependent variable:</em></td></tr>
+<tr><td></td><td colspan="1" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td>Green Energy Consumption (Billions BTU</td></tr>
+<tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Motor Gasoline Consumption (Transportation)</td><td>-0.193<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(0.035)</td></tr>
+<tr><td style="text-align:left"></td><td></td></tr>
+<tr><td style="text-align:left">Fossil Fules Consumption</td><td>-0.764<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(0.031)</td></tr>
+<tr><td style="text-align:left"></td><td></td></tr>
+<tr><td style="text-align:left">Total Energy Consumption</td><td>0.717<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(0.032)</td></tr>
+<tr><td style="text-align:left"></td><td></td></tr>
+<tr><td style="text-align:left">U.S. Electricity Net Imports</td><td>-0.255</td></tr>
+<tr><td style="text-align:left"></td><td>(0.700)</td></tr>
+<tr><td style="text-align:left"></td><td></td></tr>
+<tr><td style="text-align:left">Net Electricity Interstate Sales</td><td>-0.644<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(0.036)</td></tr>
+<tr><td style="text-align:left"></td><td></td></tr>
+<tr><td style="text-align:left">Nuclear Fuel Expenditure</td><td>-978.963<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(58.519)</td></tr>
+<tr><td style="text-align:left"></td><td></td></tr>
+<tr><td style="text-align:left">Petroleum Product Consumption</td><td>0.062<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(0.015)</td></tr>
+<tr><td style="text-align:left"></td><td></td></tr>
+<tr><td style="text-align:left">Coal Price (Industrial)</td><td>28,970.920<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(4,520.234)</td></tr>
+<tr><td style="text-align:left"></td><td></td></tr>
+<tr><td style="text-align:left">Natural Gas Price (Transportation)</td><td>-3,092.931<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(849.855)</td></tr>
+<tr><td style="text-align:left"></td><td></td></tr>
+<tr><td style="text-align:left">Coal Expenditure (Coke Plants)</td><td>-559.862<sup>***</sup></td></tr>
+<tr><td style="text-align:left"></td><td>(161.571)</td></tr>
+<tr><td style="text-align:left"></td><td></td></tr>
+<tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>160</td></tr>
+<tr><td style="text-align:left">R<sup>2</sup></td><td>0.924</td></tr>
+<tr><td style="text-align:left">Adjusted R<sup>2</sup></td><td>0.917</td></tr>
+<tr><td style="text-align:left">F Statistic</td><td>176.390<sup>***</sup> (df = 10; 146)</td></tr>
+<tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+</table>
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
