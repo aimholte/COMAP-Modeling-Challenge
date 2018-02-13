@@ -290,14 +290,55 @@ elasticitiesTX
 ```
 
 ```{r}
-names2 <- c("Motor Gasoline Consumption (Transportation)", "Fossil Fules Consumption", "Total Energy Consumption", "U.S. Electricity Net Imports", "Net Electricity Interstate Sales", "Nuclear Fuel Expenditure", "Petroleum Product Consumption", "Coal Price (Industrial)", "Natural Gas Price (Transportation)", "Coal Expenditure (Coke Plants)")
+names2 <- c("Motor Gasoline Consumption (Transportation)", "Fossil Fuels Consumption", "Total Energy Consumption", "U.S. Electricity Net Imports", "Net Electricity Interstate Sales", "Nuclear Fuel Expenditure", "Petroleum Product Consumption", "Coal Price (Industrial)", "Natural Gas Price (Transportation)", "Coal Expenditure (Coke Plants)")
 elasticiites.df <- data.frame(elasticities, elasticitiesAZ, elasticitiesCA, elasticitiesNM, elasticitiesTX)
 elasticiites.df$Total <- elasticiites.df$elasticities
 elasticiites.df$Arizona <- elasticiites.df$elasticitiesAZ
 elasticiites.df$California <- elasticiites.df$elasticitiesCA
 elasticiites.df$NewMexico <- elasticiites.df$elasticitiesNM
 elasticiites.df$Texas <- elasticiites.df$elasticitiesTX
-elasticiites.df <- elasticiites.df[,6:10]
+elasticiites.df <- elasticiites.df[,5:ncol(elasticiites.df)]
+elasticiites.df <- elasticiites.df[,-1]
+```
+
+```{r}
+library(smooth)
+smaRETCB5 <- sma(RealData$RETCB, order = 5)
+smaRETCB10 <- sma(RealData$RETCB, order = 10)
+smaMGACB5 <- sma(RealData$MGACB, order = 5)
+smaMGACB10 <- sma(RealData$MGACB, order = 10)
+smaFFTCB5 <- sma(RealData$FFTCB, order = 5)
+smaFFTCB10 <- sma(RealData$FFTCB, order = 10)
+smaTETCB5 <- sma(RealData$TETCB, order  = 5)
+smaTETCB10 <- sma(RealData$TETCB, order = 10)
+smaELNIB5 <- sma(RealData$ELNIB, order = 5)
+smaELNIB10 <- sma(RealData$ELNIB, order = 10)
+smaELISB5 <- sma(RealData$ELISB, order = 5)
+smaELISB10 <- sma(RealData$ELISB, order = 10)
+smaNUETV5 <- sma(RealData$NUETV, order = 5)
+smaNUETV10 <- sma(RealData$NUETV, order = 10)
+smaPATXB5 <- sma(RealData$PATXB, order = 5)
+smaPATXB10 <- sma(RealData$PATXB, order = 10)
+smaCLICD5 <- sma(RealData$CLICD, order = 5)
+smaCLICD10 <- sma(RealData$CLICD, order = 10)
+smaNGACD5 <- sma(RealData$NGACD, order = 5)
+smaNGACD10 <- sma(RealData$NGACD, order = 10)
+smaCLKCV5 <- sma(RealData$CLKCV, order = 5)
+smaCLCKV10 <- sma(RealData$CLKCV, order = 5)
+```
+
+```{r}
+retcbmean <- mean(smaRETCB5, smaRETCB10)
+mgacbmean <- mean(smaMGACB5, smaMGACB10)
+fftcbmean <- mean(smaFFTCB5, smaFFTCB10)
+tetcbmean <- mean(smaTETCB5, smaTETCB5)
+elnibmean <- mean(smaELNIB5, smaELNIB10)
+elisbmean <- mean(smaELISB5, smaELISB10)
+nuetvmean <- mean(smaNUETV5, smaNUETV10)
+patxbmean <- mean(smaPATXB5, smaPATXB10)
+clicdmean <- mean(smaCLICD5, smaCLICD10)
+ngacdmean <- mean(smaNGACD5, smaNGACD10)
+clkcvmean <- mean(smaCLKCV5, smaCLCKV10)
 ```
 
 
